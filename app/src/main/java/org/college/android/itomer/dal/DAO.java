@@ -51,6 +51,7 @@ public class DAO {
         this.db = new MyDatabase(context).getWritableDatabase();
     }
 
+
     public List<EmployeeTerritories> getEmployeeTerritories() {
         ArrayList<EmployeeTerritories> etList = new ArrayList<>();
 
@@ -227,19 +228,27 @@ public class DAO {
         return orders;
     }
 
+    public Cursor getCursor(String sql) {
+        return db.rawQuery(sql, null);
+    }
 
-    public void exploreTable(String table) {
-        Cursor cursor = db.rawQuery("SELECT * FROM " + table, null);
+    public void rawQuery(String sql) {
+        Cursor cursor = db.rawQuery(sql, null);
         cursor.moveToNext();
         String[] columns = cursor.getColumnNames();
-        while (cursor.moveToNext())
+        for (int i = 0; i < columns.length; i++) {
+            System.out.printf("%-30s", columns[i]);
+        }
+        System.out.println();
+        while (cursor.moveToNext()) {
             for (int i = 0; i < columns.length; i++) {
                 try {
-                    Log.e("Tomer", columns[i] + " " + cursor.getString(i));
+                    System.out.printf("%-30s", cursor.getString(i));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
+            System.out.println();
+        }
     }
 }
